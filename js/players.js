@@ -1,5 +1,5 @@
 // Déclaration globale pour pouvoir y accéder plus tard
-let ytPlayer = null;;
+let ytPlayer = null;
 let isManuallySwitching = false;
 
 // Variable globale pour suivre l'origine actuelle
@@ -174,7 +174,7 @@ function loadStream(url) {
 
 // Fonction pour charger une playlist youtube dans le lecteur : list=PLNeUzEKmiTgj_vuON_DZUp_fLqspZnnRY
 
-const API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // clé à conserver secrette
+const API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // clé à conserver secrette
 let videoIds = [];
 let currentIndex = 0;
 

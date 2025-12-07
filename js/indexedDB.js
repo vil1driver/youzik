@@ -102,20 +102,22 @@ function createButtonsFromDB(db, key, className, clickHandler) {
                     button.textContent = item[1];
                     button.dataset.id = item[0];
                     button.dataset.name = item[1];
-                    button.addEventListener('click', () => clickHandler(item[0]));
+                    
+                    // UN SEUL événement qui fait les deux actions
+                    button.addEventListener('click', () => {
+                        // 1. Retirer la classe active de tous les boutons
+                        container.querySelectorAll('.button').forEach(b => b.classList.remove('active'));
+                        // 2. Ajouter la classe active au bouton cliqué
+                        button.classList.add('active');
+                        // 3. Appeler le handler (loadVideo, loadStream, ou loadPlaylist)
+                        clickHandler(item[0]);
+                    });
+                    
                     fragment.appendChild(button);
                 }
             });
             container.appendChild(fragment);
 
-            // Gestion du bouton actif
-            const buttons = container.querySelectorAll('.button');
-            buttons.forEach(button => {
-                button.addEventListener('click', () => {
-                    buttons.forEach(b => b.classList.remove('active'));
-                    button.classList.add('active');
-                });
-            });
 
             resolve(); // tout est prêt
         }).catch(err => {
