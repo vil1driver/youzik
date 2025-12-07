@@ -1,0 +1,167 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title>Youtube Music</title>
+        <meta charset="utf-8">
+        <link rel="manifest" href="manifest.json">
+        <link rel="shortcut icon" href="images/youzic.ico">
+        <link rel="apple-touch-icon" href="images/youzic-512.png">
+        <link rel="stylesheet" href="css/base.css" type="text/css">
+        <link rel="stylesheet" href="css/editor.css" type="text/css">
+        <link rel="stylesheet" href="css/swiper-bundle.min.css" type="text/css">
+        <script src="js/jquery-3.7.1.min.js"></script>
+        <script src="js/sweetalert2.all.min.js"></script>
+        <script src="js/sw-main.js"></script>
+        <script src="https://www.youtube.com/iframe_api"></script>
+        <script src="js/players.js"></script>
+        <script src="js/swiper-bundle.min.js"></script>
+        <script src="js/indexedDB.js"></script>
+        <script src="js/editor.js"></script>
+        <script src="js/user.js"></script>
+        <script src="js/wakeLock.js"></script>
+    </head>
+    <body>
+        <div class="video-container" id="videoPlayer">
+            <!-- Le lecteur vidéo ou audio sera chargé ici -->
+        </div>
+        
+        <!-- Contrôles d'édition (nouveau) -->
+        <div class="edit-controls-top">
+            <button id="editModeBtn" class="edit-control-btn" title="Mode édition">✏️</button>
+            <button id="addItemBtn" class="edit-control-btn" title="Ajouter (détection auto)" onclick="addNewItem()">➕</button>
+        </div>
+        
+        <!-- partie slidable -->
+        <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide">
+                    <!-- Page 1 -->
+                    <div class="liste1">
+                        <!-- Boutons pour lire les vidéos seront placés ici-->
+                        <!-- Animation de chargement-->
+                        <span id="loader" class="loader">
+                            <span class="loader-inner"></span>
+                        </span>
+                    </div>
+                    <!-- fin page 1 -->
+                </div>
+                <div class="swiper-slide">
+                    <!-- Page 2 -->
+                    <div class="liste2">
+                        <!-- Boutons pour lire les web radios seront placés ici-->
+                    </div>
+                    <!-- fin page 2-->
+                </div>    
+                <div class="swiper-slide">    
+                    <!-- Page 3 -->
+                    <div class="liste3">
+                        <!-- Boutons pour lire les playlist youtube seront placés ici-->
+                    </div>
+                    <!-- fin page 3-->
+                </div>
+            </div>
+        </div>
+        <script src="js/swiper-conf.js"></script>
+        <script>
+            // Fonction pour détecter quelle liste est visible
+            function getVisibleList() {
+                console.log('=== GET VISIBLE LIST ===');
+                const slides = document.querySelectorAll('.swiper-slide');
+                console.log('Nombre de slides trouvées:', slides.length);
+                
+                for (let i = 0; i < slides.length; i++) {
+                    const slide = slides[i];
+                    const hasVisible = slide.classList.contains('swiper-slide-visible');
+                    const slideIndex = slide.getAttribute('data-swiper-slide-index');
+                    console.log(`Slide ${i}: data-swiper-slide-index=${slideIndex}, swiper-slide-visible=${hasVisible}`);
+                    
+                    // Utiliser swiper-slide-visible au lieu de swiper-slide-active
+                    if (hasVisible) {
+                        const index = parseInt(slideIndex);
+                        console.log('✅ Slide visible détectée! Index:', index);
+                        
+                        const listMapping = [
+                            { key: 'youtubeChannels', class: '.liste1', index: 0 },
+                            { key: 'radioStations', class: '.liste2', index: 1 },
+                            { key: 'youtubePlaylists', class: '.liste3', index: 2 }
+                        ];
+                        
+                        const result = listMapping[index] || listMapping[0];
+                        console.log('Résultat mappé:', result);
+                        return result;
+                    }
+                }
+                // Par défaut
+                console.log('⚠️ Aucune slide visible trouvée, retour par défaut');
+                return { key: 'youtubeChannels', class: '.liste1', index: 0 };
+            }
+            
+            // Variable pour éviter l'initialisation multiple
+            let editModeInitialized = false;
+            
+            // Polling pour attendre que le swiper soit prêt
+            function waitForSwiper(callback) {
+                if (window.swiper && window.swiper.activeIndex !== undefined) {
+                    callback();
+                } else {
+                    setTimeout(() => waitForSwiper(callback), 100);
+                }
+            }
+            
+            waitForSwiper(function() {
+                if (editModeInitialized) {
+                    console.log('⚠️ Edit mode déjà initialisé, sortie');
+                    return;
+                }
+                editModeInitialized = true;
+                console.log('Swiper détecté et prêt');
+                
+                // Gestion du bouton d'ajout
+                const addItemBtn = document.getElementById("addItemBtn");
+                addItemBtn.style.display = 'block';
+                
+                // Gestion du bouton d'édition selon la slide active
+                const editModeBtn = document.getElementById("editModeBtn");
+                editModeBtn.addEventListener("click", () => {
+                    const current = getVisibleList();
+                    console.log('Toggle edit mode sur:', current.key, 'index:', current.index);
+                    toggleEditMode(current.key, current.class);
+                });
+            });
+        </script>
+        <input type="file" id="importFile" accept=".json" style="display: none;">
+        <!-- Bouton Settings -->
+        <div id="settingsBtn" class="BPsetting">⚙️</div>
+        <!-- Menu de réglages (caché par défaut) -->
+        <div id="settingsMenu">
+            <div class="menuContent">
+                <div id="exportBtn" class="BPexport" onclick="exportDB()">💾</div>
+                <div id="importBtn" class="BPimport">🗂️</div>
+            </div>
+        </div>
+        <script>
+            document.getElementById("importFile").addEventListener("change", function () {
+                if (this.files.length > 0) {
+                    importAndReplaceDB(this.files[0]);
+                }
+            });
+            document.getElementById("importBtn").addEventListener("click", () => {
+                document.getElementById("importFile").click();
+            });
+            
+            const settingsBtn = document.getElementById("settingsBtn");
+            const settingsMenu = document.getElementById("settingsMenu");
+            
+            settingsBtn.addEventListener("click", (e) => {
+              settingsMenu.classList.add("active");
+              e.stopPropagation();
+            });
+            
+            settingsMenu.addEventListener("click", (e) => {
+                settingsMenu.classList.remove("active");
+            });
+        </script>        
+    </body>
+</html>
