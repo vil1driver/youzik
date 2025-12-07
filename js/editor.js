@@ -69,6 +69,7 @@ function toggleEditMode(listKey, listClass) {
 function attachDragEvents(listKey, listClass) {
     const container = document.querySelector(listClass);
     const buttons = container.querySelectorAll('.button');
+    let savedActiveId = null;
 
     buttons.forEach((btn) => {
         // --- DragStart / DragEnd pour desktop ---
@@ -77,9 +78,7 @@ function attachDragEvents(listKey, listClass) {
                 e.preventDefault(); // empêcher le drag si clic sur edit/delete
                 return;
             }
-            
             savedActiveId = container.querySelector('.button.active')?.dataset.id;
-            
             draggedElement = btn;
             btn.classList.add('dragging');
             try { e.dataTransfer.setData('text/plain', 'drag'); } catch {}
@@ -105,6 +104,7 @@ function attachDragEvents(listKey, listClass) {
             if (!isEditMode) return;
             if (e.target.closest('.edit-btn, .delete-btn')) return; // empêcher drag sur edit/delete
             e.preventDefault();
+            savedActiveId = container.querySelector('.button.active')?.dataset.id;
             draggedElement = btn;
             isTouchDragging = false;
             touchDragTimeout = setTimeout(() => {
@@ -156,7 +156,6 @@ function attachDragEvents(listKey, listClass) {
 
     });
 
-    let savedActiveId = null;
     // --- DROP sur le conteneur entier ---
     if (container._dropHandler) container.removeEventListener('drop', container._dropHandler);
 
