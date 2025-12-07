@@ -2,7 +2,7 @@
 html {
     touch-action: none;
     height: 100dvh; /* Fix hauteur dynamique pour mobile */
-    overflow: hidden; /* Emp�che le scroll vertical fant�me */
+    overflow: hidden; /* Empêche le scroll vertical fantôme */
 }
 
 body {
@@ -174,47 +174,115 @@ body {
     50%, 75% { height: 100%; }
 }
 
-/* === SETTINGS === */
-.BPsetting {
-    position: absolute;
-    background-color: transparent;
-    text-align: center;
+/* === MENU UNIFIÉ === */
+.unified-menu-btn {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
     user-select: none;
-    z-index: 2;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
 }
 
-#settingsMenu {
+.unified-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.unified-menu-btn:active {
+    transform: scale(0.95);
+}
+
+.unified-menu-btn.edit-mode-active {
+    background: #4CAF50;
+    color: white;
+    opacity: 1;
+}
+
+.unified-menu-btn.edit-mode-active:hover {
+    background: #45a049;
+}
+
+.unified-menu {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 9999;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(5px);
 }
 
-#settingsMenu.active {
+.unified-menu.active {
     display: flex;
+    animation: fadeIn 0.2s ease;
 }
 
-.menuContent {
-    background: transparent;
-    text-align: center;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.unified-menu-content {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
-.BPexport,
-.BPimport {
-    line-height: 1;
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 15px 25px;
+    color: white;
     cursor: pointer;
+    transition: all 0.3s ease;
     user-select: none;
 }
 
-/* === SWEETALERT - D�sactivation animations === */
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateX(10px);
+}
+
+.menu-item:active {
+    transform: scale(0.95);
+}
+
+.menu-icon {
+    font-size: 1.5em;
+}
+
+.menu-label {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+/* === SWEETALERT - Désactivation animations === */
 .swal2-popup,
 .swal2-show,
 .swal2-hide {
@@ -287,22 +355,31 @@ body.swal2-toast-shown .swal2-container {
         height: 10vw;
     }
     
-    /* Settings */
-    .BPsetting {
-        bottom: 2vw;
+    /* Menu Unifié Mobile */
+    .unified-menu-btn {
+        top: 2vw;
         right: 2vw;
-        width: 10vw;
-        height: 10vw;
+        width: 12vw;
+        height: 12vw;
         font-size: 6vw;
     }
     
-    .menuContent {
-        gap: 15vh;
+    .unified-menu-content {
+        gap: 4vh;
+        padding: 6vw;
     }
     
-    .BPexport,
-    .BPimport {
-        font-size: 35vw;
+    .menu-item {
+        padding: 4vw 6vw;
+        gap: 4vw;
+    }
+    
+    .menu-icon {
+        font-size: 8vw;
+    }
+    
+    .menu-label {
+        font-size: 5vw;
     }
     
     /* SweetAlert Mobile */
@@ -418,22 +495,31 @@ body.swal2-toast-shown .swal2-container {
         height: 80px;
     }
     
-    /* Settings */
-    .BPsetting {
-        bottom: 2vw;
-        right: 2vw;
-        width: 80px;
-        height: 80px;
-        font-size: 55px;
+    /* Menu Unifié Desktop */
+    .unified-menu-btn {
+        top: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
     }
     
-    .menuContent {
-        gap: 50px;
+    .unified-menu-content {
+        gap: 15px;
+        padding: 30px;
     }
     
-    .BPexport,
-    .BPimport {
-        font-size: 75px;
+    .menu-item {
+        padding: 15px 30px;
+        min-width: 250px;
+    }
+    
+    .menu-icon {
+        font-size: 24px;
+    }
+    
+    .menu-label {
+        font-size: 18px;
     }
     
     /* SweetAlert Desktop */
