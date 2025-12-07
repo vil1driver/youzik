@@ -105,8 +105,8 @@ function createButtonsFromDB(db, key, className, clickHandler) {
                     
                     // UN SEUL événement qui fait les deux actions
                     button.addEventListener('click', () => {
-                        // 1. Retirer la classe active de tous les boutons
-                        container.querySelectorAll('.button').forEach(b => b.classList.remove('active'));
+                        // 1. Retirer la classe active de TOUS les boutons de TOUTES les listes
+                        document.querySelectorAll('.liste1 .button, .liste2 .button, .liste3 .button').forEach(b => b.classList.remove('active'));
                         // 2. Ajouter la classe active au bouton cliqué
                         button.classList.add('active');
                         // 3. Appeler le handler (loadVideo, loadStream, ou loadPlaylist)
