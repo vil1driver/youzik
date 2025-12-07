@@ -25,12 +25,6 @@
             <!-- Le lecteur vidéo ou audio sera chargé ici -->
         </div>
         
-        <!-- Contrôles d'édition (nouveau) -->
-        <div class="edit-controls-top">
-            <button id="editModeBtn" class="edit-control-btn" title="Mode édition">✏️</button>
-            <button id="addItemBtn" class="edit-control-btn" title="Ajouter (détection auto)" onclick="addNewItem()">➕</button>
-        </div>
-        
         <!-- partie slidable -->
         <div class="swiper">
             <!-- Additional required wrapper -->
@@ -63,6 +57,34 @@
                 </div>
             </div>
         </div>
+        <!-- Overlay mode édition -->
+        <div id="editModeOverlay" class="edit-mode-overlay"></div>
+        <!-- Menu Unifié -->
+        <button id="unifiedMenuBtn" class="unified-menu-btn">☰</button>
+        
+        <div id="unifiedMenu" class="unified-menu">
+            <div class="unified-menu-content">
+                <button id="editModeMenuBtn" class="menu-item">
+                    <span class="menu-icon">✏️</span>
+                    <span class="menu-label">Mode édition</span>
+                </button>
+                <button id="addItemMenuBtn" class="menu-item">
+                    <span class="menu-icon">➕</span>
+                    <span class="menu-label">Ajouter média</span>
+                </button>
+                <button id="exportMenuBtn" class="menu-item">
+                    <span class="menu-icon">💾</span>
+                    <span class="menu-label">Exporter</span>
+                </button>
+                <button id="importMenuBtn" class="menu-item">
+                    <span class="menu-icon">🗂️</span>
+                    <span class="menu-label">Importer</span>
+                </button>
+            </div>
+        </div>
+        
+        <input type="file" id="importFile" accept=".json" style="display: none;">
+        
         <script src="js/swiper-conf.js"></script>
         <script>
             // Fonction pour détecter quelle liste est visible
@@ -118,49 +140,67 @@
                 editModeInitialized = true;
                 console.log('Swiper détecté et prêt');
                 
-                // Gestion du bouton d'ajout
-                const addItemBtn = document.getElementById("addItemBtn");
-                addItemBtn.style.display = 'block';
+                // Gestion du menu unifié
+                const unifiedMenuBtn = document.getElementById("unifiedMenuBtn");
+                const unifiedMenu = document.getElementById("unifiedMenu");
+                const editModeMenuBtn = document.getElementById("editModeMenuBtn");
+                const addItemMenuBtn = document.getElementById("addItemMenuBtn");
+                const exportMenuBtn = document.getElementById("exportMenuBtn");
+                const importMenuBtn = document.getElementById("importMenuBtn");
                 
-                // Gestion du bouton d'édition selon la slide active
-                const editModeBtn = document.getElementById("editModeBtn");
-                editModeBtn.addEventListener("click", () => {
+                // Ouvrir/Fermer le menu OU sortir du mode édition
+                unifiedMenuBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    
+                    // Si on est en mode édition, cliquer ferme le mode édition
+                    if (isEditMode) {
+                        const current = getVisibleList();
+                        toggleEditMode(current.key, current.class);
+                    } else {
+                        // Sinon, ouvrir le menu normalement
+                        unifiedMenu.classList.toggle("active");
+                    }
+                });
+                
+                // Fermer le menu en cliquant à l'extérieur
+                unifiedMenu.addEventListener("click", (e) => {
+                    if (e.target === unifiedMenu) {
+                        unifiedMenu.classList.remove("active");
+                    }
+                });
+                
+                // Mode édition
+                editModeMenuBtn.addEventListener("click", () => {
                     const current = getVisibleList();
-                    console.log('Toggle edit mode sur:', current.key, 'index:', current.index);
                     toggleEditMode(current.key, current.class);
+                    unifiedMenu.classList.remove("active");
+                });
+                
+                // Ajouter média
+                addItemMenuBtn.addEventListener("click", () => {
+                    addNewItem();
+                    unifiedMenu.classList.remove("active");
+                });
+                
+                // Exporter
+                exportMenuBtn.addEventListener("click", () => {
+                    exportDB();
+                    unifiedMenu.classList.remove("active");
+                });
+                
+                // Importer
+                importMenuBtn.addEventListener("click", () => {
+                    document.getElementById("importFile").click();
+                    unifiedMenu.classList.remove("active");
                 });
             });
         </script>
-        <input type="file" id="importFile" accept=".json" style="display: none;">
-        <!-- Bouton Settings -->
-        <div id="settingsBtn" class="BPsetting">⚙️</div>
-        <!-- Menu de réglages (caché par défaut) -->
-        <div id="settingsMenu">
-            <div class="menuContent">
-                <div id="exportBtn" class="BPexport" onclick="exportDB()">💾</div>
-                <div id="importBtn" class="BPimport">🗂️</div>
-            </div>
-        </div>
+        
         <script>
             document.getElementById("importFile").addEventListener("change", function () {
                 if (this.files.length > 0) {
                     importAndReplaceDB(this.files[0]);
                 }
-            });
-            document.getElementById("importBtn").addEventListener("click", () => {
-                document.getElementById("importFile").click();
-            });
-            
-            const settingsBtn = document.getElementById("settingsBtn");
-            const settingsMenu = document.getElementById("settingsMenu");
-            
-            settingsBtn.addEventListener("click", (e) => {
-              settingsMenu.classList.add("active");
-              e.stopPropagation();
-            });
-            
-            settingsMenu.addEventListener("click", (e) => {
-                settingsMenu.classList.remove("active");
             });
         </script>        
     </body>
