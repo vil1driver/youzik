@@ -12,6 +12,7 @@ function toggleEditMode(listKey, listClass) {
     currentEditList = isEditMode ? listKey : null;
 
     const container = document.querySelector(listClass);
+    const menuBtn = document.getElementById('unifiedMenuBtn');
     
     if (!container) {
         console.error('Container non trouvé pour', listClass);
@@ -19,12 +20,12 @@ function toggleEditMode(listKey, listClass) {
     }
     
     const buttons = container.querySelectorAll('.button');
-    const editBtn = document.getElementById('editModeBtn');
 
     if (isEditMode) {
-        editBtn.textContent = '✅';
-        editBtn.classList.add('active');
-
+        // Changer l'icône du menu en mode édition
+        menuBtn.textContent = '✅';
+        menuBtn.classList.add('edit-mode-active');
+        
         // Ajouter les contrôles d'édition à chaque bouton
         buttons.forEach((btn, realIndex) => {
             if (!btn.querySelector('.edit-controls')) {
@@ -47,9 +48,10 @@ function toggleEditMode(listKey, listClass) {
         attachEditEvents(listKey, listClass);
         attachDragEvents(listKey, listClass);
     } else {
-        editBtn.textContent = '✏️';
-        editBtn.classList.remove('active');
-
+        // Restaurer l'icône du menu
+        menuBtn.textContent = '☰';
+        menuBtn.classList.remove('edit-mode-active');
+        
         // Retirer les contrôles d'édition de TOUTES les listes
         document.querySelectorAll('.liste1, .liste2, .liste3').forEach(list => {
             list.querySelectorAll('.button').forEach(btn => {
@@ -528,10 +530,18 @@ function refreshList(listKey, listClass, preserveActiveId = null) {
 
 // Initialisation au chargement de la page
 document.addEventListener("DOMContentLoaded", () => {
+
     // Désactiver le mode édition lors du changement de slide
     if (window.swiper) {
         window.swiper.on('slideChange', () => {
             if (isEditMode) {
+                // Restaurer l'icône du menu
+                const menuBtn = document.getElementById('unifiedMenuBtn');
+                if (menuBtn) {
+                    menuBtn.textContent = '☰';
+                    menuBtn.classList.remove('edit-mode-active');
+                }
+                
                 // Retirer les contrôles d'édition de TOUTES les listes
                 document.querySelectorAll('.liste1, .liste2, .liste3').forEach(list => {
                     list.querySelectorAll('.button').forEach(btn => {
@@ -546,12 +556,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Désactiver le mode édition
                 isEditMode = false;
                 currentEditList = null;
-                
-                const editBtn = document.getElementById('editModeBtn');
-                if (editBtn) {
-                    editBtn.textContent = '✏️';
-                    editBtn.classList.remove('active');
-                }
             }
         });
     }
