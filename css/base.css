@@ -1,13 +1,13 @@
 /* === BASE === */
 html {
     touch-action: none;
-    height: 100vh; /* Fix hauteur dynamique pour mobile */
+    height: 100dvh; /* Fix hauteur dynamique pour mobile */
     overflow: hidden; /* Empêche le scroll vertical fantôme */
 }
 
 body {
     background-color: black;
-    height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -88,6 +88,11 @@ body {
 .button:active,
 .active {
     filter: brightness(130%);
+}
+
+.button.edit-mode:active {
+    /* Utiliser filter: none ou la luminosité normale de l'état du bouton */
+    filter: none; 
 }
 
 /* Boutons liste 1 - Vert */
@@ -229,6 +234,7 @@ body {
     display: flex;
     animation: fadeIn 0.2s ease;
 }
+
 
 @keyframes fadeIn {
     from {
