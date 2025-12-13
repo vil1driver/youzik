@@ -348,6 +348,10 @@ body.swal2-toast-shown .swal2-container {
         font-size: 4vw;
     }
     
+    button.menu-item {
+        margin-left: 0;
+    }
+    
     .loader {
         top: 20vh;
         left: 45vw;
@@ -487,6 +491,10 @@ body.swal2-toast-shown .swal2-container {
         margin-left: 15%;
         font-size: 16px;
     }
+    
+    button.menu-item {
+        margin-left: 0;
+    }    
     
     .loader {
         top: 20vh;
