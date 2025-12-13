@@ -1,13 +1,13 @@
 /* === BASE === */
 html {
     touch-action: none;
-    height: 100lvh; /* Fix hauteur dynamique pour mobile */
+    height: 100vh; /* Fix hauteur dynamique pour mobile */
     overflow: hidden; /* Empêche le scroll vertical fantôme */
 }
 
 body {
     background-color: black;
-    height: 100lvh;
+    height: 100vh;
     overflow: hidden;
 }
 
