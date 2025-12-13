@@ -85,14 +85,27 @@ body {
     user-select: none;
 }
 
+/* ANCIENNE RÈGLE : La règle suivante est trop générique et peut être écrasée par une règle plus spécifique */
 .button:active,
 .active {
     filter: brightness(130%);
 }
 
+/* NOUVELLE RÈGLE (Ajouter la classe .button pour augmenter la spécificité) */
+.button.active {
+    filter: brightness(130%) !important; /* Utiliser !important en dernier recours si nécessaire */
+}
+
+/* Votre correction du flash (conserver) */
 .button.edit-mode:active {
-    /* Utiliser filter: none ou la luminosité normale de l'état du bouton */
-    filter: none; 
+    filter: none; /* OU filter: brightness(100%); si vous voulez être explicite */
+}
+
+.edit-btn:active,
+.delete-btn:active {
+    filter: none;
+    background: transparent; 
+    box-shadow: none;
 }
 
 /* Boutons liste 1 - Vert */
