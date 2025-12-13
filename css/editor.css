@@ -21,7 +21,7 @@
     border-radius: 3px;
     border: none;
     background: transparent;
-    cursor: pointer;
+    cursor: none;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
@@ -29,13 +29,8 @@
     user-select: none;
     line-height: 1;
     padding: 0;
-    opacity: 0.7;
 }
 
-.edit-controls button:active {
-    opacity: 1;
-    transform: scale(1.2);
-}
 
 .edit-controls .delete-btn {
     padding-left: 0;
@@ -72,7 +67,7 @@
         width: 6vw;
         height: 6vw;
         font-size: 4.5vw;
-        opacity: 0.85;
+        
     }
     
     .edit-controls .drag-btn {
