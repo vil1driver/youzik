@@ -101,12 +101,7 @@ body {
     filter: none; /* OU filter: brightness(100%); si vous voulez être explicite */
 }
 
-.edit-btn:active,
-.delete-btn:active {
-    filter: none;
-    background: transparent; 
-    box-shadow: none;
-}
+
 
 /* Boutons liste 1 - Vert */
 .liste1 button {
