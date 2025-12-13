@@ -21,6 +21,14 @@ function toggleEditMode(listKey, listClass) {
     
     const buttons = container.querySelectorAll('.button');
 
+
+    // NOUVEAU : Contrôler le glissement Swiper
+    if (window.swiper) {
+        // Si on est en mode édition (true), on DÉSACTIVE le glissement (false).
+        // Si on quitte le mode édition (false), on RÉACTIVE le glissement (true).
+        window.swiper.allowTouchMove = !isEditMode; 
+    }
+    
     if (isEditMode) {
         // Changer l'icône du menu en mode édition
         menuBtn.textContent = '✅';
@@ -207,6 +215,7 @@ function attachEditEvents(listKey, listClass) {
             editBtn.dataset.index = realIndex;
             editBtn.onclick = (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 const index = parseInt(editBtn.dataset.index);
                 openEditDialog(listKey, listClass, index);
             };
@@ -216,6 +225,7 @@ function attachEditEvents(listKey, listClass) {
             deleteBtn.dataset.index = realIndex;
             deleteBtn.onclick = (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 const index = parseInt(deleteBtn.dataset.index);
                 confirmDelete(listKey, listClass, index);
             };
@@ -498,11 +508,10 @@ function refreshList(listKey, listClass, preserveActiveId = null) {
 
             // Réactiver le mode édition si besoin
             if (wasEditMode) {
-                // Réactiver l'icône du menu
-                const menuBtn = document.getElementById('unifiedMenuBtn');
-                if (menuBtn) {
-                    menuBtn.textContent = '✅';
-                    menuBtn.classList.add('edit-mode-active');
+                const editBtn = document.getElementById('editModeBtn');
+                if (editBtn) {
+                    editBtn.textContent = '✅';
+                    editBtn.classList.add('active');
                 }
 
                 buttons.forEach((btn, realIndex) => {
@@ -529,35 +538,3 @@ function refreshList(listKey, listClass, preserveActiveId = null) {
 
 
 
-// Initialisation au chargement de la page
-document.addEventListener("DOMContentLoaded", () => {
-
-    // Désactiver le mode édition lors du changement de slide
-    if (window.swiper) {
-        window.swiper.on('slideChange', () => {
-            if (isEditMode) {
-                // Restaurer l'icône du menu
-                const menuBtn = document.getElementById('unifiedMenuBtn');
-                if (menuBtn) {
-                    menuBtn.textContent = '☰';
-                    menuBtn.classList.remove('edit-mode-active');
-                }
-                
-                // Retirer les contrôles d'édition de TOUTES les listes
-                document.querySelectorAll('.liste1, .liste2, .liste3').forEach(list => {
-                    list.querySelectorAll('.button').forEach(btn => {
-                        const controls = btn.querySelector('.edit-controls');
-                        if (controls) {
-                            controls.remove();
-                        }
-                        btn.classList.remove('edit-mode');
-                    });
-                });
-                
-                // Désactiver le mode édition
-                isEditMode = false;
-                currentEditList = null;
-            }
-        });
-    }
-});
