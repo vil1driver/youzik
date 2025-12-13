@@ -1,4 +1,4 @@
-var CACHE_ASSETS = '202512131212';
+var CACHE_ASSETS = '202512131302';
 var assets = [ 
     'index.html',
     'css/base.css',
