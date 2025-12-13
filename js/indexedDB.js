@@ -51,7 +51,7 @@ async function importJsonIfEmpty(db) {
         const request = store.count();
         request.onsuccess = async () => {
             if (request.result === 0) {
-                const response = await fetch("./list.json");
+                const response = await fetch("list.json");
                 const data = await response.json();
                 const txWrite = db.transaction(storeName, "readwrite");
                 const storeWrite = txWrite.objectStore(storeName);
