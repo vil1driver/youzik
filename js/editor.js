@@ -498,10 +498,11 @@ function refreshList(listKey, listClass, preserveActiveId = null) {
 
             // Réactiver le mode édition si besoin
             if (wasEditMode) {
-                const editBtn = document.getElementById('editModeBtn');
-                if (editBtn) {
-                    editBtn.textContent = '✅';
-                    editBtn.classList.add('active');
+                // Réactiver l'icône du menu
+                const menuBtn = document.getElementById('unifiedMenuBtn');
+                if (menuBtn) {
+                    menuBtn.textContent = '✅';
+                    menuBtn.classList.add('edit-mode-active');
                 }
 
                 buttons.forEach((btn, realIndex) => {
