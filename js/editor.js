@@ -3,56 +3,40 @@ let isEditMode = false;
 let currentEditList = null;
 let draggedElement = null;
 let draggedIndex = null;
-let touchDragTimeout = null; // Pour le drag mobile
+let touchDragTimeout = null;
 let isTouchDragging = false;
 
 // Fonction pour basculer en mode édition
 function toggleEditMode(listKey, listClass) {
     isEditMode = !isEditMode;
     currentEditList = isEditMode ? listKey : null;
-
     const container = document.querySelector(listClass);
     const menuBtn = document.getElementById('unifiedMenuBtn');
-    
     if (!container) {
         console.error('Container non trouvé pour', listClass);
         return;
     }
-    
     const buttons = container.querySelectorAll('.button');
 
     if (isEditMode) {
-        // Changer l'icône du menu en mode édition
         menuBtn.textContent = '✅';
         menuBtn.classList.add('edit-mode-active');
-        
-        // Ajouter les contrôles d'édition à chaque bouton
         buttons.forEach((btn, realIndex) => {
             if (!btn.querySelector('.edit-controls')) {
                 const controls = document.createElement('div');
                 controls.className = 'edit-controls';
-                controls.innerHTML = `
-                    <button class="edit-btn" data-index="${realIndex}">✏️</button>
-                    <button class="delete-btn" data-index="${realIndex}">❌️</button>
-                `;
+                controls.innerHTML = ` ✏️ ❌️ `;
                 btn.appendChild(controls);
                 btn.classList.add('edit-mode');
-                
-                // Rendre le bouton draggable
                 btn.setAttribute('draggable', 'true');
                 btn.dataset.index = realIndex;
             }
         });
-
-        // Attacher les événements
         attachEditEvents(listKey, listClass);
         attachDragEvents(listKey, listClass);
     } else {
-        // Restaurer l'icône du menu
         menuBtn.textContent = '☰';
         menuBtn.classList.remove('edit-mode-active');
-        
-        // Retirer les contrôles d'édition de TOUTES les listes
         document.querySelectorAll('.liste1, .liste2, .liste3').forEach(list => {
             list.querySelectorAll('.button').forEach(btn => {
                 const controls = btn.querySelector('.edit-controls');
@@ -74,10 +58,10 @@ function attachDragEvents(listKey, listClass) {
     let savedActiveId = null;
 
     buttons.forEach((btn) => {
-        // --- DragStart / DragEnd pour desktop ---
+        // Desktop drag
         btn.addEventListener('dragstart', (e) => {
             if (e.target.closest('.edit-btn, .delete-btn')) {
-                e.preventDefault(); // empêcher le drag si clic sur edit/delete
+                e.preventDefault();
                 return;
             }
             savedActiveId = container.querySelector('.button.active')?.dataset.id;
@@ -101,10 +85,10 @@ function attachDragEvents(listKey, listClass) {
             else btn.parentNode.insertBefore(draggedElement, btn.nextSibling);
         });
 
-        // --- Touch support pour mobile ---
+        // Mobile touch drag
         btn.addEventListener('touchstart', (e) => {
             if (!isEditMode) return;
-            if (e.target.closest('.edit-btn, .delete-btn')) return; // empêcher drag sur edit/delete
+            if (e.target.closest('.edit-btn, .delete-btn')) return;
             e.preventDefault();
             savedActiveId = container.querySelector('.button.active')?.dataset.id;
             draggedElement = btn;
@@ -129,10 +113,7 @@ function attachDragEvents(listKey, listClass) {
 
         btn.addEventListener('touchend', async (e) => {
             clearTimeout(touchDragTimeout);
-        
             if (draggedElement) draggedElement.classList.remove('dragging');
-        
-            // --- SAUVEGARDE MOBILE ---
             if (isTouchDragging && draggedElement) {
                 try {
                     const buttonsNow = container.querySelectorAll('.button');
@@ -140,25 +121,20 @@ function attachDragEvents(listKey, listClass) {
                         btn.dataset.id ?? btn.getAttribute('data-id') ?? btn.textContent.trim(),
                         btn.dataset.name ?? btn.getAttribute('data-name') ?? btn.textContent.trim()
                     ]);
-        
                     const db = await openDB();
                     await saveListToDB(db, listKey, newOrder);
                     console.log('[touchend] ordre sauvegardé ->', newOrder);
-        
                     refreshList(listKey, listClass, savedActiveId);
                 } catch (err) {
                     console.error('[touchend] erreur sauvegarde ordre', err);
-                    Swal.fire('Erreur', 'Impossible de sauvegarder l’ordre après le déplacement.', 'error');
                 }
             }
-        
             draggedElement = null;
             isTouchDragging = false;
         });
-
     });
 
-    // --- DROP sur le conteneur entier ---
+    // Drop container events
     if (container._dropHandler) container.removeEventListener('drop', container._dropHandler);
 
     container._dropHandler = async (e) => {
@@ -169,17 +145,11 @@ function attachDragEvents(listKey, listClass) {
                 btn.dataset.id ?? btn.getAttribute('data-id') ?? btn.textContent.trim(),
                 btn.dataset.name ?? btn.getAttribute('data-name') ?? btn.textContent.trim()
             ]);
-
-            console.log('[drop] newOrder ->', newOrder);
-
             const db = await openDB();
             await saveListToDB(db, listKey, newOrder);
-            console.log('[drop] saveListToDB ok');
-
             refreshList(listKey, listClass, savedActiveId);
         } catch (err) {
             console.error('[drop] erreur sauvegarde ordre', err);
-            Swal.fire('Erreur', 'Impossible de sauvegarder l’ordre après le déplacement.', 'error');
         } finally {
             if (draggedElement) draggedElement.classList.remove('dragging');
             draggedElement = null;
@@ -198,30 +168,32 @@ function attachEditEvents(listKey, listClass) {
     const container = document.querySelector(listClass);
     const buttons = container.querySelectorAll('.button');
 
-    // Recalculer les index en fonction de la position réelle
     buttons.forEach((parentBtn, realIndex) => {
         const editBtn = parentBtn.querySelector('.edit-btn');
         const deleteBtn = parentBtn.querySelector('.delete-btn');
-        
+
         if (editBtn) {
             editBtn.dataset.index = realIndex;
-            editBtn.onclick = (e) => {
+
+            // ✅ Mobile-safe handler
+            editBtn.addEventListener("pointerup", (e) => {
                 e.stopPropagation();
-                const index = parseInt(editBtn.dataset.index);
-                openEditDialog(listKey, listClass, index);
-            };
+                e.preventDefault();
+                openEditDialog(listKey, listClass, realIndex);
+            });
         }
-        
+
         if (deleteBtn) {
             deleteBtn.dataset.index = realIndex;
-            deleteBtn.onclick = (e) => {
+            deleteBtn.addEventListener("pointerup", (e) => {
                 e.stopPropagation();
-                const index = parseInt(deleteBtn.dataset.index);
-                confirmDelete(listKey, listClass, index);
-            };
+                e.preventDefault();
+                confirmDelete(listKey, listClass, realIndex);
+            });
         }
     });
 }
+
 
 // Ouvrir la boîte de dialogue d'édition
 async function openEditDialog(listKey, listClass, index) {
