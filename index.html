@@ -164,32 +164,38 @@
                 
                 // Fermer le menu en cliquant à l'extérieur
                 unifiedMenu.addEventListener("click", (e) => {
+                    e.stopPropagation();
                     if (e.target === unifiedMenu) {
                         unifiedMenu.classList.remove("active");
                     }
                 });
                 
                 // Mode édition
-                editModeMenuBtn.addEventListener("click", () => {
+                editModeMenuBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
                     const current = getVisibleList();
                     toggleEditMode(current.key, current.class);
                     unifiedMenu.classList.remove("active");
                 });
                 
                 // Ajouter média
-                addItemMenuBtn.addEventListener("click", () => {
+                addItemMenuBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
                     addNewItem();
                     unifiedMenu.classList.remove("active");
                 });
                 
                 // Exporter
-                exportMenuBtn.addEventListener("click", () => {
+                exportMenuBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
                     exportDB();
                     unifiedMenu.classList.remove("active");
                 });
                 
                 // Importer
-                importMenuBtn.addEventListener("click", () => {
+                importMenuBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
                     document.getElementById("importFile").click();
                     unifiedMenu.classList.remove("active");
                 });
