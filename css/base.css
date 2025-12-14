@@ -1,15 +1,21 @@
 /* === BASE === */
+
+html, body {
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+
 html {
     touch-action: none;
-    height: 100dvh; /* Fix hauteur dynamique pour mobile */
-    overflow: hidden; /* Empêche le scroll vertical fantôme */
 }
 
 body {
     background-color: black;
-    height: 100dvh;
-    overflow: hidden;
 }
+
 
 ::-webkit-scrollbar {
     display: none;
@@ -202,17 +208,10 @@ body {
     align-items: center;
     justify-content: center;
     opacity: 0.6;
+    -webkit-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
 }
 
-.unified-menu-btn:hover {
-    background: rgba(255, 255, 255, 0.9);
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-.unified-menu-btn:active {
-    transform: scale(0.95);
-}
 
 .unified-menu-btn.edit-mode-active {
     background: #4CAF50;
@@ -220,9 +219,6 @@ body {
     opacity: 1;
 }
 
-.unified-menu-btn.edit-mode-active:hover {
-    background: #45a049;
-}
 
 .unified-menu {
     display: none;
@@ -348,8 +344,8 @@ body.swal2-toast-shown .swal2-container {
     }
     
     .liste1, .liste2, .liste3 {
-        max-height: calc(100vh - 56.25vw - 4vw);
-        height: calc(100vh - 56.25vw - 4vw);
+        max-height: calc(100dvh - 56.25vw - 4vw);
+        height: calc(100dvh - 56.25vw - 4vw);
         width: 100vw;
         background-position: 100% bottom;
     }
@@ -586,3 +582,9 @@ body.swal2-toast-shown .swal2-container {
         border-radius: 10px;
     }
 }
+
+
+
+
+
+
