@@ -343,6 +343,34 @@ body.swal2-toast-shown .swal2-container {
         transform: translate(50%, -50%);
     }
     
+    #prevVideoBtn::before {
+        content: "";
+        position: absolute;
+        top: -150px;
+        bottom: -20px;
+        left: -150px;
+        right: 0px;
+    }
+    
+    #nextVideoBtn::before {
+        content: "";
+        position: absolute;
+        top: -150px;
+        bottom: -20px;
+        left: 0px;
+        right: -150px;
+    }
+    
+    #videoToggleBtn::before,
+    #audioToggleBtn::before {
+        content: "";
+        position: absolute;
+        top: -150px;
+        bottom: -20px;
+        left: 0px;
+        right: 0px;
+    }
+    
     .liste1, .liste2, .liste3 {
         max-height: calc(100dvh - 56.25vw - 4vw);
         height: calc(100dvh - 56.25vw - 4vw);
