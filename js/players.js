@@ -175,7 +175,7 @@ function loadStream(url) {
 
 // Fonction pour charger une playlist youtube dans le lecteur : list=PLNeUzEKmiTgj_vuON_DZUp_fLqspZnnRY
 
-const API_KEY = "AIzaSyBwlaExQ18dDdfs4TV0lBJDy_FZvQJEiPw"; // clé à conserver secrette
+const API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // clé à conserver secrette
 let videoIds = [];
 let currentIndex = 0;
 
