@@ -4,7 +4,6 @@ var assets = [
     'css/base.css',
     'css/editor.css',
     'css/swiper-bundle.min.css',
-    'js/jquery-3.7.1.min.js',
     'js/swiper-bundle.min.js',
     'js/swiper-conf.js',
     'js/indexedDB.js',
