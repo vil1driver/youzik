@@ -128,6 +128,7 @@ function loadStream(url) {
     audioElement.style.display = 'none';
 
     const playPauseBtn = document.createElement('button');
+    playPauseBtn.id = 'audioToggleBtn';
     playPauseBtn.innerHTML = '<span class="spinner"></span>';
 
     let isPlaying = false;
@@ -174,7 +175,7 @@ function loadStream(url) {
 
 // Fonction pour charger une playlist youtube dans le lecteur : list=PLNeUzEKmiTgj_vuON_DZUp_fLqspZnnRY
 
-const API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // clé à conserver secrette
+const API_KEY = "AIzaSyBwlaExQ18dDdfs4TV0lBJDy_FZvQJEiPw"; // clé à conserver secrette
 let videoIds = [];
 let currentIndex = 0;
 
