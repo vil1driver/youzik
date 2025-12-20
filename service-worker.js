@@ -8,6 +8,7 @@ var assets = [
     'js/swiper-conf.js',
     'js/indexedDB.js',
     'js/user.js',
+    'js/menu.js',
     'js/sw-main.js',
     'js/players.js',
     'js/editor.js',
